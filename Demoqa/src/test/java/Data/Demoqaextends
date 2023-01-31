@@ -1,0 +1,64 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
+public class DemoqaShopAutomation {
+    WebDriver driver;
+    ExtentReports extent;
+    ExtentTest test;
+
+    @BeforeMethod
+    public void setUp() {
+        // Initialize the web driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+
+        // Initialize the extent report
+        extent = new ExtentReports();
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("demoqa-shop-automation-report.html");
+        extent.attachReporter(htmlReporter);
+    }
+
+    @Test
+    public void loginAndCheckout() {
+        // Start the test
+        test = extent.createTest("Login and Checkout", "Test the login and checkout functionality of the demoqa shop");
+
+        // Open the website
+        driver.get("https://shop.demoqa.com/shop/");
+        test.log(Status.INFO, "Navigated to the demoqa shop website");
+
+        // Click on the login button
+        WebElement loginButton = driver.findElement(By.xpath("//a[text()='Login']"));
+        loginButton.click();
+        test.log(Status.INFO, "Clicked on the login button");
+
+        // Enter the username and password
+        WebElement usernameField = driver.findElement(By.id("username"));
+        usernameField.sendKeys("your-username");
+        WebElement passwordField = driver.findElement(By.id("password"));
+        passwordField.sendKeys("your-password");
+        test.log(Status.INFO, "Entered the username and password");
+
+        // Click on the submit button
+        WebElement submitButton = driver.findElement(By.xpath("//input[@value='Login']"));
+        submitButton.click();
+        test.log(Status.INFO, "Clicked on the submit button");
+
+        // Verify that the user is logged in
+        WebElement welcomeMessage = driver.findElement(By.xpath("//p[text()='Welcome, your-username']"));
+        Assert.assertTrue(welcomeMessage.isDisplayed());
+        test.log(Status.PASS, "Verified that the user is logged in");
+
+        // Add three items to the cart
+        WebElement firstItem = driver.findElement(By.xpath("//a[text()='

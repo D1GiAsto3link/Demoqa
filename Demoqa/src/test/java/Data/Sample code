@@ -1,0 +1,79 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import Data.ExcelUtils;
+import Utilities.PropertyFileUtils;
+import Application.LoginPage;
+import Application.ProductsPage;
+import Application.CartPage;
+import Application.CheckoutPage;
+import Application.ConfirmationPage;
+import Reporting.ExtentReport;
+
+public class ShoppingTest {
+
+    WebDriver driver;
+    LoginPage loginPage;
+    ProductsPage productsPage;
+    CartPage cartPage;
+    CheckoutPage checkoutPage;
+    ConfirmationPage confirmationPage;
+    SoftAssert softAssert;
+    ExtentReport extentReport;
+
+    @BeforeMethod
+    @Parameters("browser")
+
+    public void setUp(String browser) {
+        if (browser.equalsIgnoreCase("chrome")) {
+            System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
+            driver = new ChromeDriver();
+        }
+else if (browser.equalsIgnoreCase("firefox")) {
+            System.setProperty("webdriver.gecko.driver", "path/to/geckodriver.exe");
+
+            driver = new FirefoxDriver();
+
+        }
+
+        driver.manage().window().maximize();
+
+        driver.get(PropertyFileUtils.getValueForKey("url"));
+        loginPage = new LoginPage(driver);
+
+        productsPage = new ProductsPage(driver);
+
+        cartPage = new CartPage(driver);
+
+        checkoutPage = new CheckoutPage(driver);
+
+        confirmationPage = new ConfirmationPage(driver);
+        softAssert = new SoftAssert();
+
+        extentReport = new ExtentReport();
+    }
+
+    @Test(dataProvider = "testData")
+    public void shoppingTest(String testScenario, String username, String password, String product, String expectedResult) {
+        extentReport.startTest(testScenario);
+        loginPage.login(username, password);
+        if (expectedResult.equalsIgnoreCase("login successful")) {
+            productsPage.addToCart(product);
+            cartPage.proceedToCheckout();
+            checkoutPage.placeOrder();
+            String actualResult = confirmationPage.getOrderConfirmation();
+            softAssert.assertEquals(actualResult, expectedResult, "Order placement failed");
+            extentReport.logPass("Order placed successfully");
+        } else {
+            String actualResult = loginPage.getLoginError();
+            softAssert.assertEquals(actualResult, expectedResult, "Login failed");
+            extentReport.logFail("Invalid login credentials");
+        }
+        softAssert.assertAll();
+        extentReport.endTest

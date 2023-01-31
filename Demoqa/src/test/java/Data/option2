@@ -1,0 +1,57 @@
+Write a test automation code using intelij, JAVA, with selenium, and TestNG on the website demoqa, to test  (Login, Products, Cart, Checkout, Confirmation)
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+public class DemoQATest {
+    WebDriver driver;
+
+    @BeforeTest
+    public void setup() {
+        // Set the path to the chrome driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.get("https://demoqa.com/");
+    }
+
+    @Test
+    public void testLogin() {
+        driver.findElement(By.xpath("//a[@id='account']")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Log in')]")).click();
+        driver.findElement(By.xpath("//input[@id='log']")).sendKeys("username");
+        driver.findElement(By.xpath("//input[@id='pwd']")).sendKeys("password");
+        driver.findElement(By.xpath("//input[@id='login']")).click();
+        Assert.assertTrue(driver.findElement(By.xpath("//a[contains(text(),'Log out')]")).isDisplayed());
+    }
+
+    @Test
+    public void testProducts() {
+        driver.findElement(By.xpath("//a[contains(text(),'Product Category')]")).click();
+        Assert.assertTrue(driver.findElement(By.xpath("//h2[contains(text(),'Accessories')]")).isDisplayed());
+    }
+
+    @Test
+    public void testCart() {
+        driver.findElement(By.xpath("//a[contains(text(),'Product Category')]")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Accessories')]")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Magic Mouse')]")).click();
+        driver.findElement(By.xpath("//input[@value='Add To Cart']")).click();
+        Assert.assertTrue(driver.findElement(By.xpath("//a[contains(text(),'Magic Mouse')]")).isDisplayed());
+    }
+
+    @Test
+    public void testCheckout() {
+        driver.findElement(By.xpath("//a[@class='cart_icon']")).click();
+        driver.findElement(By.xpath("//a[contains(text(),'Checkout')]")).click();
+        Assert.assertTrue(driver.findElement(By.xpath("//h1[contains(text(),'Checkout')]")).isDisplayed());
+    }
+
+    @Test
+    public void testConfirmation() {
+        driver.findElement(By.xpath("//a[@class='cart_icon']")).click();
+        driver.findElement(By.x

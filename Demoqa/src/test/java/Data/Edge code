@@ -1,0 +1,24 @@
+    EdgeDriver edgeDriver;
+
+ @Test (priority = 1)
+    //this will open the browser up (basically connecting to the web)
+    public void SetUpedge(){
+
+      WebDriverManager.edgedriver().setup();
+       edgeDriver = new EdgeDriver();
+
+    }
+
+    @Test (priority = 2)
+    //this one will load the designated website to test
+    public void BrowserStack() throws InterruptedException{
+        edgeDriver.get("https://shop.demoqa.com/shop/");
+      edgeDriver.manage().window().maximize();
+        Thread.sleep(2000);
+    }
+
+    @Test (priority = 3)
+    public void Dismiss() throws InterruptedException {
+        WebElement dismisslink = driver.findElement(By.linkText("Dismiss"));dismisslink.click();
+        Thread.sleep(2500);
+    }

@@ -1,0 +1,20 @@
+
+ FirefoxDriver firefoxDriver;
+
+
+@Test (priority = 1)
+    //this will open the browser up (basically connecting to the web)
+    public void SetUpfirefox(){
+
+        WebDriverManager.firefoxdriver().setup();
+        edgeDriver = new EdgeDriver();
+
+    }
+
+    @Test (priority = 2)
+    //this one will load the designated website to test
+    public void Browserfire() throws InterruptedException {
+        edgeDriver.get("https://shop.demoqa.com/shop/");
+        edgeDriver.manage().window().maximize();
+        Thread.sleep(2000);
+    }

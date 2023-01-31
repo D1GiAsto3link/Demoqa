@@ -1,0 +1,44 @@
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+public class MultiBrowserTest {
+    ChromeDriver chromeDriver;
+    FirefoxDriver firefoxDriver;
+
+    @BeforeTest
+    public void setUp() {
+        // Set up Chrome driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        chromeDriver = new ChromeDriver();
+
+        // Set up Firefox driver
+        System.setProperty("webdriver.gecko.driver", "path/to/geckodriver");
+        firefoxDriver = new FirefoxDriver();
+    }
+
+    @Test
+    public void testChrome() {
+        chromeDriver.get("https://www.google.com");
+        // Perform test actions on Chrome browser
+    }
+
+    @Test
+    public void testFirefox() {
+        firefoxDriver.get("https://www.google.com");
+        // Perform test actions on Firefox browser
+    }
+
+    @AfterTest
+    public void tearDown() {
+        chromeDriver.quit();
+        firefoxDriver.quit();
+    }
+}
+In this example, the setUp() method is run before the tests begin and sets up both the Chrome and Firefox drivers.
+The testChrome() method runs a test on the Chrome browser, and the testFirefox() method runs a test on the Firefox browser.
+The tearDown() method is run after the tests are finished and quits both browsers.
+
+Note: Make sure you replace the path/to/chromedriver and path/to/geckodriver with the actual path of the chrome and firefox driver in your system.
